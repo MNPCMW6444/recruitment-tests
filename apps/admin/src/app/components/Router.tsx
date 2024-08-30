@@ -1,7 +1,7 @@
+import { lazy, Suspense, useContext } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import { AuthContext, AuthPage } from '@base-frontend';
-import { useContext } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/home/HomePage';
 import { UserType } from '@offisito-shared';
 import {
@@ -9,7 +9,18 @@ import {
   dayLogoTextOnly,
   nightLogoTextOnly,
   TopBar,
+  Btn,
+  CloseButton,
+  PrimaryText,
 } from '@offisito-frontend';
+
+// Lazy load the ChatsPage component
+const ChatsPage = lazy(
+  () =>
+    import(
+      '../../../../../libs/base-frontend/src/components/pages/chats/ChatsPage'
+    ),
+);
 
 const Router = () => {
   const { user } = useContext(AuthContext);
@@ -39,6 +50,23 @@ const Router = () => {
             <Grid item height="100%" overflow="scroll">
               <Routes>
                 <Route path="/*" element={<HomePage />} />
+                <Route
+                  path="/chats"
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <ChatsPage
+                        tenum={{
+                          guest: UserType.guest,
+                          host: UserType.host,
+                          admin: UserType.admin,
+                        }} // Assuming admin is the user type
+                        domain="server.offisito.com" // Replace with the actual domain or variable
+                        customComponents={{ Btn, CloseButton, PrimaryText }} // Replace with actual components if needed
+                      />
+                    </Suspense>
+                  }
+                />
+                {/* Other routes */}
               </Routes>
             </Grid>
           </Grid>
@@ -55,4 +83,5 @@ const Router = () => {
     </BrowserRouter>
   );
 };
+
 export default Router;

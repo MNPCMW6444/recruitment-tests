@@ -150,3 +150,4 @@ export const ChatsPage = ({
     </Grid>
   );
 };
+export default ChatsPage;

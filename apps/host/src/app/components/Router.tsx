@@ -1,10 +1,9 @@
-import { useContext } from 'react';
+import { lazy, Suspense, useContext } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import {
   AuthContext,
   AuthPage,
   ChatContextProvider,
-  ChatsPage,
   NotificationsPage,
   NavBar,
   Img,
@@ -32,6 +31,14 @@ import {
   TopBar,
 } from '@offisito-frontend';
 import { UserType } from '@offisito-shared';
+
+// Lazy load the ChatsPage component
+const ChatsPage = lazy(
+  () =>
+    import(
+      '../../../../../libs/base-frontend/src/components/pages/chats/ChatsPage'
+    ),
+);
 
 const routes = [
   { name: 'Summery', route: 'summery' },
@@ -120,11 +127,17 @@ const Router = () => {
                   <Route
                     path="/chats"
                     element={
-                      <ChatsPage
-                        domain="server.offisito.com"
-                        tenum={UserType}
-                        customComponents={{ Btn, CloseButton, PrimaryText }}
-                      />
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <ChatsPage
+                          tenum={{
+                            guest: UserType.guest,
+                            host: UserType.host,
+                            admin: UserType.admin,
+                          }} // Assuming host is the user type
+                          domain="server.offisito.com"
+                          customComponents={{ Btn, CloseButton, PrimaryText }}
+                        />
+                      </Suspense>
                     }
                   />
                   <Route path="/settings" element={<SettingPage />} />
