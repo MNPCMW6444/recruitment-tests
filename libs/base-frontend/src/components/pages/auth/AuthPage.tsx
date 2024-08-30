@@ -308,6 +308,19 @@ export const AuthPage = <UserType,>({
       clickHandler: mainClickHandler(undefined),
       label: LABELS[buttonLabel][step],
     };
+
+    // New button styles
+    const buttonStyles = {
+      backgroundColor: 'green', // default green color
+      '&:hover': {
+        backgroundColor: 'blue', // blue on hover
+      },
+      '&:active': {
+        backgroundColor: 'black', // black when clicked
+      },
+      color: 'white', // I assume white text color contrast
+    };
+
     const navigateButton: {
       exists?: boolean;
       label?: string;
@@ -371,7 +384,11 @@ export const AuthPage = <UserType,>({
           width="100%"
         >
           <Grid item width="100%">
-            <customComponents.Btn fullWidth onClick={mainButton.clickHandler}>
+            <customComponents.Btn
+              fullWidth
+              onClick={mainButton.clickHandler}
+              sx={buttonStyles} // apply the new styles here
+            >
               {mainButton.label}
             </customComponents.Btn>
           </Grid>
